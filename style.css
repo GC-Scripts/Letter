@@ -9,7 +9,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #ffd6e0; /* color base para detrás del canvas */
+  background: #ffd6e0;
   position: relative;
 }
 
@@ -30,6 +30,21 @@ h1, h2 {
   margin: 0 0 20px;
   font-weight: 600;
   color: #ff6f91;
+}
+
+#saludo {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #ff6f91;
+  margin-bottom: 10px;
+}
+
+#contenido {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  line-height: 1.5;
 }
 
 p {
@@ -67,7 +82,6 @@ button:hover {
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Destello sutil en el botón */
 button::after {
   content: "";
   position: absolute;
@@ -85,8 +99,8 @@ button:hover::after { left: 100%; transition: left 0.5s; }
 }
 
 .emoji {
-  font-size: 2em;
-  margin-top: 20px;
+  font-size: 2.2em;
+  margin-top: 10px;
 }
 
 .animate-slide {
@@ -102,9 +116,7 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   position: fixed; top:0; left:0; width:100%; height:100%;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   z-index: 2;
-  /* Sin gradiente: dejamos ver el canvas de corazones */
   background: transparent;
-  backdrop-filter: blur(0px);
 }
 
 .caja-regalo {
@@ -137,11 +149,10 @@ button:hover::after { left: 100%; transition: left 0.5s; }
 .mensaje-overlay {
   position: fixed; top:0; left:0; width:100%; height:100%;
   display: flex; align-items: center; justify-content: center;
-  z-index: 3; /* por encima del fondo */
-  background: rgba(255, 255, 255, 0); /* totalmente transparente para ver corazones */
+  z-index: 3;
+  background: transparent;
 }
 
-/* Efecto de aparición */
 .mensaje-container {
   transform: scale(0.95);
   opacity: 0;
@@ -152,7 +163,7 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   opacity: 1;
 }
 
-/* Canvas confeti (corazones al abrir) */
+/* Canvas confeti */
 #confeti {
   position: fixed; top:0; left:0; width:100%; height:100%;
   pointer-events: none;
@@ -165,16 +176,3 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   pointer-events: none;
   z-index: 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
