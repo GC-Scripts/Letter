@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Util: tamaño de canvas con devicePixelRatio ---
+  // --- Util: tamaño de canvas con scrollHeight ---
   function setupCanvas(canvas) {
     const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-    const rect = { width: window.innerWidth, height: window.innerHeight };
-    canvas.style.width = rect.width + "px";
-    canvas.style.height = rect.height + "px";
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    const width = window.innerWidth;
+    const height = document.body.scrollHeight; // ✅ altura total de la página
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
     const ctx = canvas.getContext("2d");
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // normaliza escala para evitar “crecimiento”
-    return { ctx, dpr, rect };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, width, height };
   }
 
-  // --- Obtener parámetros URL ---
   function getParams() {
     const params = {};
     const query = window.location.search.substring(1);
@@ -24,85 +22,21 @@ document.addEventListener("DOMContentLoaded", () => {
     return params;
   }
 
-  // --- Confeti al abrir el mensaje ---
-  function startConfeti() {
-    const canvas = document.getElementById("confeti");
-    if (!canvas) return;
-    let { ctx } = setupCanvas(canvas);
-
-    const hearts = [];
-    const count = 140;
-
-    function resetHearts() {
-      hearts.length = 0;
-      for (let i = 0; i < count; i++) {
-        hearts.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight - window.innerHeight,
-          size: Math.random() * 18 + 10, // tamaño fijo, no varía en el tiempo
-          speedY: Math.random() * 2 + 1.2,
-          driftAmp: Math.random() * 0.8 + 0.3,
-          angle: Math.random() * Math.PI * 2,
-          color: "rgba(255,0,90,0.95)"
-        });
-      }
-    }
-
-    function drawHeart(x, y, size, color) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(0, -size / 2, -size, -size / 2, -size, 0);
-      ctx.bezierCurveTo(-size, size / 2, 0, size * 0.75, 0, size);
-      ctx.bezierCurveTo(0, size * 0.75, size, size / 2, size, 0);
-      ctx.bezierCurveTo(size, -size / 2, 0, -size / 2, 0, 0);
-      ctx.fillStyle = color;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      for (const h of hearts) {
-        h.y += h.speedY;
-        h.x += Math.sin(h.angle) * h.driftAmp;
-        h.angle += 0.015;
-        drawHeart(h.x, h.y, h.size, h.color);
-
-        if (h.y > window.innerHeight + h.size) {
-          h.y = -h.size;
-          h.x = Math.random() * window.innerWidth;
-          h.angle = Math.random() * Math.PI * 2;
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    resetHearts();
-    animate();
-
-    window.addEventListener("resize", () => {
-      ({ ctx } = setupCanvas(canvas));
-      resetHearts();
-    }, { passive: true });
-  }
-
-  // --- Fondo de corazones animado ---
+  // --- Fondo de corazones infinito ---
   function startFondoCorazones() {
     const canvas = document.getElementById("fondo-corazones");
     if (!canvas) return;
-    let { ctx } = setupCanvas(canvas);
+    let { ctx, width, height } = setupCanvas(canvas);
 
     const hearts = [];
-    const count = window.innerWidth < 480 ? 30 : 50;
+    const count = width < 480 ? 20 : 35;
 
     function resetHearts() {
       hearts.length = 0;
       for (let i = 0; i < count; i++) {
         hearts.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
+          x: Math.random() * width,
+          y: Math.random() * height,
           size: Math.random() * 26 + 14,
           speedY: Math.random() * 0.5 + 0.2,
           driftAmp: Math.random() * 0.4 + 0.15,
@@ -127,15 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function animate() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, width, height);
       for (const h of hearts) {
         h.y += h.speedY;
         h.x += Math.sin(h.angle) * h.driftAmp;
         h.angle += 0.01;
         drawHeart(h.x, h.y, h.size, h.color);
-        if (h.y > window.innerHeight + h.size) {
+        if (h.y > height + h.size) {
           h.y = -h.size;
-          h.x = Math.random() * window.innerWidth;
+          h.x = Math.random() * width;
           h.angle = Math.random() * Math.PI * 2;
         }
       }
@@ -146,12 +80,76 @@ document.addEventListener("DOMContentLoaded", () => {
     animate();
 
     window.addEventListener("resize", () => {
-      ({ ctx } = setupCanvas(canvas));
+      ({ ctx, width, height } = setupCanvas(canvas));
       resetHearts();
     }, { passive: true });
   }
 
-  // Inicializa fondo de corazones en todas las páginas
+  // --- Confeti al abrir el mensaje ---
+  function startConfeti() {
+    const canvas = document.getElementById("confeti");
+    if (!canvas) return;
+    let { ctx, width, height } = setupCanvas(canvas);
+
+    const hearts = [];
+    const count = 80; // reducido
+
+    function resetHearts() {
+      hearts.length = 0;
+      for (let i = 0; i < count; i++) {
+        hearts.push({
+          x: Math.random() * width,
+          y: Math.random() * height - height,
+          size: Math.random() * 18 + 10,
+          speedY: Math.random() * 2 + 1.2,
+          driftAmp: Math.random() * 0.8 + 0.3,
+          angle: Math.random() * Math.PI * 2,
+          color: "rgba(255,0,90,0.95)"
+        });
+      }
+    }
+
+    function drawHeart(x, y, size, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(0, -size / 2, -size, -size / 2, -size, 0);
+      ctx.bezierCurveTo(-size, size / 2, 0, size * 0.75, 0, size);
+      ctx.bezierCurveTo(0, size * 0.75, size, size / 2, size, 0);
+      ctx.bezierCurveTo(size, -size / 2, 0, -size / 2, 0, 0);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (const h of hearts) {
+        h.y += h.speedY;
+        h.x += Math.sin(h.angle) * h.driftAmp;
+        h.angle += 0.015;
+        drawHeart(h.x, h.y, h.size, h.color);
+
+        if (h.y > height + h.size) {
+          h.y = -h.size;
+          h.x = Math.random() * width;
+          h.angle = Math.random() * Math.PI * 2;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    resetHearts();
+    animate();
+
+    window.addEventListener("resize", () => {
+      ({ ctx, width, height } = setupCanvas(canvas));
+      resetHearts();
+    }, { passive: true });
+  }
+
+  // Inicializa fondo de corazones
   startFondoCorazones();
 
   // --- Botón abrir regalo ---
@@ -163,8 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.getElementById("mensaje-card");
 
       if (regalo) regalo.style.display = "none";
-      if (overlay) overlay.style.display = "flex"; // muestra overlay centrado
-      if (card) card.classList.add("show");        // transición suave
+      if (overlay) overlay.style.display = "block"; // ✅ ahora se muestra como bloque scrollable
+      if (card) card.classList.add("show");
 
       const params = getParams();
       const id = params.id;
@@ -197,12 +195,14 @@ document.addEventListener("DOMContentLoaded", () => {
       mensajes[id] = { nombre, destino, mensaje };
       localStorage.setItem('mensajes', JSON.stringify(mensajes));
 
-      const url = `mensaje.html?id=${id}`;
+      const url = `${window.location.origin}/mensaje.html?id=${id}`;
       document.getElementById("enlace").innerHTML =
         `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
     });
   }
 });
+
+
 
 
 
