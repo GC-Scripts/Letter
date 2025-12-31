@@ -86,7 +86,7 @@ button:hover {
 @keyframes slideIn { from {transform: translateY(50px); opacity:0;} to {transform: translateY(0); opacity:1;} }
 .animate-slide { animation: slideIn 1s ease forwards; }
 
-/* Pantalla del regalo */
+/* --- Pantalla del regalo --- */
 .regalo-screen {
   position: fixed;
   top:0; left:0; width:100%; height:100%;
@@ -99,28 +99,21 @@ button:hover {
 }
 
 .caja-regalo {
-  font-size: 6em;
+  font-size: 10em; /* más grande */
   cursor: pointer;
   transition: transform 0.5s;
   position: relative;
 }
 
-/* Animación de apertura */
 .caja-regalo.abrir {
   animation: abrirCaja 1s forwards;
 }
 
 @keyframes abrirCaja {
   0% { transform: scale(1) rotate(0deg); }
-  30% { transform: scale(1.2) rotate(-10deg); }
-  60% { transform: scale(1.2) rotate(10deg); }
+  30% { transform: scale(1.3) rotate(-10deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
   100% { transform: scale(0) rotate(0deg); opacity:0; }
-}
-
-.regalo-screen p {
-  margin-top: 20px;
-  font-size: 1.2em;
-  color: #fff;
 }
 
 /* --- Canvas confeti --- */
@@ -133,6 +126,8 @@ button:hover {
   pointer-events: none;
   z-index: 9999;
 }
+
+
 
 
 
