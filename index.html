@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Envía tu mensaje</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Envía un mensaje especial</h1>
+    <form id="mensajeForm">
+      <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="text" name="destino" placeholder="Nombre de quien recibe" required>
+      <textarea name="mensaje" placeholder="Escribe tu mensaje..." required></textarea>
+      <button type="submit">Generar enlace</button>
+    </form>
+    <div id="enlace"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
