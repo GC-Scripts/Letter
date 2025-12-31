@@ -9,9 +9,10 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #ffd6e0;
+  background: #fff8e7; /* color crema */
   position: relative;
 }
+
 
 /* Contenedor principal y tarjeta de mensaje */
 .container, .mensaje-container {
@@ -176,3 +177,4 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   pointer-events: none;
   z-index: 1;
 }
+
