@@ -16,6 +16,9 @@ if (document.getElementById("saludo")) {
   const params = getParams();
   document.getElementById("saludo").textContent = `Hola ${params.destino}!`;
   document.getElementById("contenido").textContent = params.mensaje;
+
+  // Iniciar confeti
+  if (typeof startConfetti === "function") startConfetti();
 }
 
 // Si estamos en index.html
@@ -32,3 +35,5 @@ if (form) {
     enlaceDiv.innerHTML = `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
   });
 }
+
+
