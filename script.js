@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Ajuste para GitHub Pages ---
-  const basePath = "/TU_REPO"; // ✅ reemplaza con el nombre de tu repositorio si usas GitHub Pages
+  const repoName = "Letter"; // nombre de tu repositorio
 
   function setupCanvas(canvas) {
     const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
@@ -191,12 +190,14 @@ document.addEventListener("DOMContentLoaded", () => {
       mensajes[id] = { nombre, destino, mensaje };
       localStorage.setItem('mensajes', JSON.stringify(mensajes));
 
-      const url = `${window.location.origin}${basePath}/mensaje.html?id=${id}`;
+      const url = `${window.location.origin}/${repoName}/mensaje.html?id=${id}`;
       document.getElementById("enlace").innerHTML =
         `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
     });
   }
 });
+
+
 
 
 
