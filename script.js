@@ -71,26 +71,30 @@ function startConfetti() {
 }
 
 // --- Si estamos en mensaje.html ---
-if (document.getElementById("abrir-btn")) {
-  const abrirBtn = document.getElementById("abrir-btn");
-  abrirBtn.addEventListener("click", () => {
-    // Ocultar regalo, mostrar mensaje
-    document.getElementById("regalo-screen").style.display = "none";
-    document.getElementById("mensaje-screen").style.display = "block";
+const cajaRegalo = document.getElementById("caja-regalo");
+if (cajaRegalo) {
+  cajaRegalo.addEventListener("click", () => {
+    // Animar la caja
+    cajaRegalo.classList.add("abrir");
 
-    // Cargar mensaje desde localStorage
-    const params = getParams();
-    const id = params.id;
-    const mensajeData = JSON.parse(localStorage.getItem('mensajes') || '{}')[id];
+    // Esperar que termine la animación antes de mostrar mensaje
+    setTimeout(() => {
+      document.getElementById("regalo-screen").style.display = "none";
+      document.getElementById("mensaje-screen").style.display = "block";
 
-    if (mensajeData) {
-      document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
-      document.getElementById("contenido").textContent = mensajeData.mensaje;
-      startConfetti();
-    } else {
-      document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
-      document.getElementById("contenido").textContent = "";
-    }
+      const params = getParams();
+      const id = params.id;
+      const mensajeData = JSON.parse(localStorage.getItem('mensajes') || '{}')[id];
+
+      if (mensajeData) {
+        document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
+        document.getElementById("contenido").textContent = mensajeData.mensaje;
+        startConfetti();
+      } else {
+        document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
+        document.getElementById("contenido").textContent = "";
+      }
+    }, 1000); // duración de la animación
   });
 }
 
@@ -114,6 +118,8 @@ if (form) {
     enlaceDiv.innerHTML = `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
   });
 }
+
+
 
 
 
