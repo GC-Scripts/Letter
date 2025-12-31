@@ -9,11 +9,11 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #ffd6e0;
+  background: #ffd6e0; /* color base para detrás del canvas */
   position: relative;
 }
 
-/* Contenedor principal */
+/* Contenedor principal y tarjeta de mensaje */
 .container, .mensaje-container {
   background: rgba(255,255,255,0.95);
   padding: 40px;
@@ -58,12 +58,25 @@ button {
   cursor: pointer;
   font-size: 1.1em;
   transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
 button:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
+
+/* Destello sutil en el botón */
+button::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.3);
+  transform: skewX(-20deg);
+}
+button:hover::after { left: 100%; transition: left 0.5s; }
 
 #enlace {
   margin-top: 20px;
@@ -77,25 +90,31 @@ button:hover {
 }
 
 .animate-slide {
-  animation: slideIn 1s ease forwards;
+  animation: slideIn 0.8s ease forwards;
 }
-
 @keyframes slideIn {
-  from { transform: translateY(50px); opacity:0; }
+  from { transform: translateY(30px); opacity:0; }
   to { transform: translateY(0); opacity:1; }
 }
 
 /* --- Regalo --- */
 .regalo-screen {
   position: fixed; top:0; left:0; width:100%; height:100%;
-  background: linear-gradient(135deg, #ffecd2, #fcb69f);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   z-index: 2;
+  /* Sin gradiente: dejamos ver el canvas de corazones */
+  background: transparent;
+  backdrop-filter: blur(0px);
 }
 
 .caja-regalo {
-  font-size: 8em; /* decorativo */
+  font-size: 8em;
   margin-bottom: 20px;
+  animation: bounce 1.5s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
 /* Botón abrir regalo */
@@ -114,27 +133,40 @@ button:hover {
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
+/* Overlay del mensaje centrado */
+.mensaje-overlay {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3; /* por encima del fondo */
+  background: rgba(255, 255, 255, 0); /* totalmente transparente para ver corazones */
+}
+
+/* Efecto de aparición */
+.mensaje-container {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+.mensaje-container.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
 /* Canvas confeti (corazones al abrir) */
 #confeti {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  position: fixed; top:0; left:0; width:100%; height:100%;
   pointer-events: none;
   z-index: 9999;
 }
 
 /* Canvas fondo de corazones */
 #fondo-corazones {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width:100%;
-  height:100%;
+  position: fixed; top: 0; left: 0; width:100%; height:100%;
   pointer-events: none;
   z-index: 1;
 }
+
+
 
 
 
