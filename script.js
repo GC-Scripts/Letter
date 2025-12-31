@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Util: tamaño de canvas con scrollHeight ---
+  // --- Ajuste para GitHub Pages ---
+  const basePath = "/TU_REPO"; // ✅ reemplaza con el nombre de tu repositorio si usas GitHub Pages
+
   function setupCanvas(canvas) {
     const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
     const width = window.innerWidth;
-    const height = document.body.scrollHeight; // ✅ altura total de la página
+    const height = document.body.scrollHeight;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     const ctx = canvas.getContext("2d");
@@ -22,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return params;
   }
 
-  // --- Fondo de corazones infinito ---
   function startFondoCorazones() {
     const canvas = document.getElementById("fondo-corazones");
     if (!canvas) return;
@@ -85,14 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   }
 
-  // --- Confeti al abrir el mensaje ---
   function startConfeti() {
     const canvas = document.getElementById("confeti");
     if (!canvas) return;
     let { ctx, width, height } = setupCanvas(canvas);
 
     const hearts = [];
-    const count = 80; // reducido
+    const count = 80;
 
     function resetHearts() {
       hearts.length = 0;
@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
         h.x += Math.sin(h.angle) * h.driftAmp;
         h.angle += 0.015;
         drawHeart(h.x, h.y, h.size, h.color);
-
         if (h.y > height + h.size) {
           h.y = -h.size;
           h.x = Math.random() * width;
@@ -149,10 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   }
 
-  // Inicializa fondo de corazones
   startFondoCorazones();
 
-  // --- Botón abrir regalo ---
   const btnAbrir = document.getElementById("abrir-regalo");
   if (btnAbrir) {
     btnAbrir.addEventListener("click", () => {
@@ -161,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.getElementById("mensaje-card");
 
       if (regalo) regalo.style.display = "none";
-      if (overlay) overlay.style.display = "block"; // ✅ ahora se muestra como bloque scrollable
+      if (overlay) overlay.style.display = "block";
       if (card) card.classList.add("show");
 
       const params = getParams();
@@ -180,7 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Index.html: generar enlace ---
   const form = document.getElementById("mensajeForm");
   if (form) {
     form.addEventListener("submit", e => {
@@ -195,12 +191,13 @@ document.addEventListener("DOMContentLoaded", () => {
       mensajes[id] = { nombre, destino, mensaje };
       localStorage.setItem('mensajes', JSON.stringify(mensajes));
 
-      const url = `${window.location.origin}/mensaje.html?id=${id}`;
+      const url = `${window.location.origin}${basePath}/mensaje.html?id=${id}`;
       document.getElementById("enlace").innerHTML =
         `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
     });
   }
 });
+
 
 
 
