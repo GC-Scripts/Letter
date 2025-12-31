@@ -1,39 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
 body {
-  font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
+  font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: repeating-linear-gradient(
-    45deg,
-    #ff9a9e,
-    #ff9a9e 50px,
-    #fad0c4 50px,
-    #fad0c4 100px
-  );
   overflow: hidden;
+  background: #ffd6e0;
+  position: relative;
 }
 
-/* Corazones de fondo */
-body::before {
-  content: '💖💖💖💖💖💖💖💖';
-  font-size: 4em;
-  position: absolute;
-  top: -20%;
-  left: -20%;
-  width: 140%;
-  height: 140%;
-  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 50px);
-  display: flex;
-  flex-wrap: wrap;
-  pointer-events: none;
-}
-
-/* --- Contenedor --- */
+/* Contenedor principal */
 .container, .mensaje-container {
   background: rgba(255,255,255,0.95);
   padding: 40px;
@@ -43,7 +23,7 @@ body::before {
   max-width: 500px;
   text-align: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 h1, h2 {
@@ -114,7 +94,7 @@ button:hover {
 }
 
 .caja-regalo {
-  font-size: 8em; /* solo decorativo */
+  font-size: 8em; /* decorativo */
   margin-bottom: 20px;
 }
 
@@ -134,7 +114,7 @@ button:hover {
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* --- Canvas confeti --- */
+/* Canvas confeti (corazones al abrir) */
 #confeti {
   position: fixed;
   top:0;
@@ -144,6 +124,19 @@ button:hover {
   pointer-events: none;
   z-index: 9999;
 }
+
+/* Canvas fondo de corazones */
+#fondo-corazones {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height:100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
 
 
 
