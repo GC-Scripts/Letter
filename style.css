@@ -19,8 +19,8 @@ body {
   padding: 40px;
   border-radius: 25px;
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-  width: 90%;
-  max-width: 500px;
+  width: 95%;              /* más ancho */
+  max-width: 700px;        /* antes era 500px */
   text-align: center;
   position: relative;
   z-index: 2;
@@ -46,6 +46,7 @@ h1, h2 {
   margin-bottom: 20px;
   white-space: pre-wrap;
   line-height: 1.5;
+  word-wrap: break-word;   /* evita que palabras largas rompan el diseño */
 }
 
 .emoji {
@@ -171,6 +172,8 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   pointer-events: none;
   z-index: 1;
 }
+
+
 
 
 
