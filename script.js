@@ -10,58 +10,113 @@ document.addEventListener("DOMContentLoaded", () => {
     return params;
   }
 
-  // --- Confeti + corazones ---
-  function startConfetti() {
+  // --- Confeti al abrir el mensaje ---
+  function startConfeti() {
     const canvas = document.getElementById("confeti");
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    const particles = [];
+    const hearts = [];
     const count = 150;
-    for(let i=0;i<count;i++){
-      particles.push({
+
+    for(let i=0; i<count; i++){
+      hearts.push({
         x: Math.random()*canvas.width,
         y: Math.random()*canvas.height - canvas.height,
-        r: Math.random()*6+4,
-        d: Math.random()*count,
-        color: Math.random()>0.7?'red':`hsl(${Math.random()*360},100%,60%)`,
-        tilt: Math.random()*10-10,
-        tiltAngleIncrement: Math.random()*0.07+0.05,
-        shape: Math.random()>0.7?'heart':'line'
+        size: Math.random()*20+10,
+        speed: Math.random()*2+1,
+        angle: Math.random()*Math.PI*2
+      });
+    }
+
+    function drawHeart(x, y, size){
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.bezierCurveTo(0,-size/2, -size,-size/2, -size,0);
+      ctx.bezierCurveTo(-size,size/2, 0,size*0.75, 0,size);
+      ctx.bezierCurveTo(0,size*0.75, size,size/2, size,0);
+      ctx.bezierCurveTo(size,-size/2, 0,-size/2, 0,0);
+      ctx.fillStyle='red';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      hearts.forEach(h=>{
+        h.y += h.speed;
+        h.x += Math.sin(h.angle)*0.5;
+        h.angle += 0.01;
+        drawHeart(h.x,h.y,h.size);
+        if(h.y>canvas.height+h.size){ h.y=-h.size; h.x=Math.random()*canvas.width; }
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+    window.addEventListener("resize", ()=>{
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  }
+
+  // --- Fondo de corazones animado ---
+  function startFondoCorazones() {
+    const canvas = document.getElementById("fondo-corazones");
+    if(!canvas) return;
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const hearts = [];
+    const count = 50;
+    for(let i=0;i<count;i++){
+      hearts.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        size: Math.random()*30+15,
+        speed: Math.random()*0.5+0.2,
+        angle: Math.random()*Math.PI*2
       });
     }
 
     function drawHeart(x,y,size){
+      ctx.save();
+      ctx.translate(x,y);
       ctx.beginPath();
-      ctx.moveTo(x,y);
-      ctx.bezierCurveTo(x,y-size/2, x-size,y-size/2, x-size,y);
-      ctx.bezierCurveTo(x-size,y+size/2, x,y+size/1.5, x,y+size);
-      ctx.bezierCurveTo(x,y+size/1.5, x+size,y+size/2, x+size,y);
-      ctx.bezierCurveTo(x+size,y-size/2, x,y-size/2, x,y);
-      ctx.fillStyle='red'; ctx.fill();
+      ctx.moveTo(0,0);
+      ctx.bezierCurveTo(0,-size/2, -size,-size/2, -size,0);
+      ctx.bezierCurveTo(-size,size/2, 0,size*0.75, 0,size);
+      ctx.bezierCurveTo(0,size*0.75, size,size/2, size,0);
+      ctx.bezierCurveTo(size,-size/2, 0,-size/2, 0,0);
+      ctx.fillStyle='rgba(255,0,100,0.3)';
+      ctx.fill();
+      ctx.restore();
     }
 
-    function draw(){
+    function animate(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(c=>{
-        if(c.shape==='heart'){ drawHeart(c.x,c.y,c.r); }
-        else{
-          ctx.beginPath();
-          ctx.lineWidth=c.r/2;
-          ctx.strokeStyle=c.color;
-          ctx.moveTo(c.x+c.tilt+c.r/4,c.y);
-          ctx.lineTo(c.x+c.tilt,c.y+c.tilt+c.r/4);
-          ctx.stroke();
-        }
-        c.tilt += c.tiltAngleIncrement;
-        c.y += (Math.cos(c.d)+3+c.r/2)/2;
-        if(c.y>canvas.height){ c.y=-10; c.x=Math.random()*canvas.width; }
+      hearts.forEach(h=>{
+        h.y += h.speed;
+        h.x += Math.sin(h.angle)*0.2;
+        h.angle += 0.01;
+        drawHeart(h.x,h.y,h.size);
+        if(h.y > canvas.height + h.size){ h.y=-h.size; h.x=Math.random()*canvas.width; }
       });
-      requestAnimationFrame(draw);
+      requestAnimationFrame(animate);
     }
-    draw();
-    window.addEventListener("resize",()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
+    animate();
+
+    window.addEventListener("resize", ()=>{
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
   }
+
+  startFondoCorazones();
 
   // --- Botón abrir regalo ---
   const btnAbrir = document.getElementById("abrir-regalo");
@@ -78,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(mensajeData){
         document.getElementById("saludo").textContent=`Hola ${mensajeData.destino}!`;
         document.getElementById("contenido").textContent=mensajeData.mensaje;
-        startConfetti();
+        startConfeti();
       } else {
         document.getElementById("saludo").textContent="Mensaje no encontrado 😢";
         document.getElementById("contenido").textContent="";
@@ -107,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
