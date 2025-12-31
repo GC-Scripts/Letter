@@ -9,7 +9,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #fff8e7; /* color crema */
+  background: #fff8e7; /* fondo crema */
   position: relative;
 }
 
@@ -19,11 +19,13 @@ body {
   padding: 40px;
   border-radius: 25px;
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-  width: 95%;              /* más ancho */
-  max-width: 700px;        /* antes era 500px */
+  width: 95%;
+  max-width: 700px;
   text-align: center;
   position: relative;
   z-index: 2;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 h1, h2 {
@@ -32,7 +34,7 @@ h1, h2 {
   color: #ff6f91;
 }
 
-/* Mensaje ordenado */
+/* Mensaje ordenado y adaptable */
 #saludo {
   font-size: 1.8em;
   font-weight: 600;
@@ -46,7 +48,9 @@ h1, h2 {
   margin-bottom: 20px;
   white-space: pre-wrap;
   line-height: 1.5;
-  word-wrap: break-word;   /* evita que palabras largas rompan el diseño */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .emoji {
@@ -63,7 +67,10 @@ input, textarea {
   font-size: 1em;
 }
 
-textarea { resize: none; height: 100px; }
+textarea {
+  resize: none;
+  height: 100px;
+}
 
 button {
   padding: 12px 25px;
@@ -86,12 +93,18 @@ button:hover {
 button::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: rgba(255,255,255,0.3);
   transform: skewX(-20deg);
 }
-button:hover::after { left: 100%; transition: left 0.5s; }
+
+button:hover::after {
+  left: 100%;
+  transition: left 0.5s;
+}
 
 #enlace {
   margin-top: 20px;
@@ -102,17 +115,31 @@ button:hover::after { left: 100%; transition: left 0.5s; }
 .animate-slide {
   animation: slideIn 0.8s ease forwards;
 }
+
 @keyframes slideIn {
-  from { transform: translateY(30px); opacity:0; }
-  to { transform: translateY(0); opacity:1; }
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* --- Regalo --- */
 .regalo-screen {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
-  background: transparent; /* deja ver el fondo crema + corazones */
+  background: transparent;
 }
 
 .caja-regalo {
@@ -120,9 +147,14 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   margin-bottom: 20px;
   animation: bounce 1.5s infinite;
 }
+
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 /* Botón abrir regalo */
@@ -136,6 +168,7 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 #abrir-regalo:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
@@ -143,8 +176,14 @@ button:hover::after { left: 100%; transition: left 0.5s; }
 
 /* Overlay del mensaje centrado */
 .mensaje-overlay {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  display: flex; align-items: center; justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 3;
   background: transparent;
 }
@@ -154,6 +193,7 @@ button:hover::after { left: 100%; transition: left 0.5s; }
   opacity: 0;
   transition: transform 0.6s ease, opacity 0.6s ease;
 }
+
 .mensaje-container.show {
   transform: scale(1);
   opacity: 1;
@@ -161,17 +201,27 @@ button:hover::after { left: 100%; transition: left 0.5s; }
 
 /* Canvas confeti */
 #confeti {
-  position: fixed; top:0; left:0; width:100%; height:100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 9999;
 }
 
 /* Canvas fondo de corazones */
 #fondo-corazones {
-  position: fixed; top: 0; left: 0; width:100%; height:100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 1;
 }
+
+
 
 
 
