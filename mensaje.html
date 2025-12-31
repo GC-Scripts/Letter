@@ -6,25 +6,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Fondo de corazones -->
   <canvas id="fondo-corazones"></canvas>
 
-  <!-- Pantalla del regalo -->
+  <!-- Pantalla inicial con regalo -->
   <div class="regalo-screen">
     <div class="caja-regalo">🎁</div>
     <button id="abrir-regalo">Abrir regalo</button>
   </div>
 
   <!-- Pantalla del mensaje -->
-  <div id="mensaje-screen" class="mensaje-container animate-slide" style="display:none;">
-    <h2 id="saludo">Hola!</h2>
-    <p id="contenido"></p>
-    <div class="emoji">💌✨🌸</div>
+  <div id="mensaje-screen" class="mensaje-overlay" style="display:none;">
+    <div class="mensaje-container animate-slide" id="mensaje-card">
+      <h2 id="saludo">Hola!</h2>
+      <p id="contenido"></p>
+      <div class="emoji">💌✨🌸</div>
+    </div>
   </div>
 
+  <!-- Confeti -->
   <canvas id="confeti"></canvas>
+
+  <!-- Script principal -->
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
