@@ -1,18 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Util: tamaño de canvas con devicePixelRatio ---
   function setupCanvas(canvas) {
     const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-    const rect = { width: window.innerWidth, height: window.innerHeight };
-    canvas.style.width = rect.width + "px";
-    canvas.style.height = rect.height + "px";
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
     const ctx = canvas.getContext("2d");
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // normaliza escala para evitar “crecimiento”
-    return { ctx, dpr, rect };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx;
   }
 
-  // --- Obtener parámetros URL ---
   function getParams() {
     const params = {};
     const query = window.location.search.substring(1);
@@ -24,14 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return params;
   }
 
-  // --- Confeti al abrir el mensaje ---
+  // --- Confeti ---
   function startConfeti() {
     const canvas = document.getElementById("confeti");
     if (!canvas) return;
-    let { ctx } = setupCanvas(canvas);
+    let ctx = setupCanvas(canvas);
 
     const hearts = [];
-    const count = 140;
+    const count = 80; // reducido
 
     function resetHearts() {
       hearts.length = 0;
@@ -39,170 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
         hearts.push({
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight - window.innerHeight,
-          size: Math.random() * 18 + 10, // tamaño fijo, no varía en el tiempo
+          size: Math.random() * 18 + 10,
           speedY: Math.random() * 2 + 1.2,
-          driftAmp: Math.random() * 0.8 + 0.3,
-          angle: Math.random() * Math.PI * 2,
-          color: "rgba(255,0,90,0.95)"
-        });
-      }
-    }
+          driftAmp: Math.random() * 0
 
-    function drawHeart(x, y, size, color) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(0, -size / 2, -size, -size / 2, -size, 0);
-      ctx.bezierCurveTo(-size, size / 2, 0, size * 0.75, 0, size);
-      ctx.bezierCurveTo(0, size * 0.75, size, size / 2, size, 0);
-      ctx.bezierCurveTo(size, -size / 2, 0, -size / 2, 0, 0);
-      ctx.fillStyle = color;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      for (const h of hearts) {
-        h.y += h.speedY;
-        h.x += Math.sin(h.angle) * h.driftAmp;
-        h.angle += 0.015;
-        drawHeart(h.x, h.y, h.size, h.color);
-
-        if (h.y > window.innerHeight + h.size) {
-          h.y = -h.size;
-          h.x = Math.random() * window.innerWidth;
-          h.angle = Math.random() * Math.PI * 2;
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    resetHearts();
-    animate();
-
-    window.addEventListener("resize", () => {
-      ({ ctx } = setupCanvas(canvas));
-      resetHearts();
-    }, { passive: true });
-  }
-
-  // --- Fondo de corazones animado ---
-  function startFondoCorazones() {
-    const canvas = document.getElementById("fondo-corazones");
-    if (!canvas) return;
-    let { ctx } = setupCanvas(canvas);
-
-    const hearts = [];
-    const count = window.innerWidth < 480 ? 30 : 50;
-
-    function resetHearts() {
-      hearts.length = 0;
-      for (let i = 0; i < count; i++) {
-        hearts.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          size: Math.random() * 26 + 14,
-          speedY: Math.random() * 0.5 + 0.2,
-          driftAmp: Math.random() * 0.4 + 0.15,
-          angle: Math.random() * Math.PI * 2,
-          color: "rgba(255,0,100,0.28)"
-        });
-      }
-    }
-
-    function drawHeart(x, y, size, color) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(0, -size / 2, -size, -size / 2, -size, 0);
-      ctx.bezierCurveTo(-size, size / 2, 0, size * 0.75, 0, size);
-      ctx.bezierCurveTo(0, size * 0.75, size, size / 2, size, 0);
-      ctx.bezierCurveTo(size, -size / 2, 0, -size / 2, 0, 0);
-      ctx.fillStyle = color;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      for (const h of hearts) {
-        h.y += h.speedY;
-        h.x += Math.sin(h.angle) * h.driftAmp;
-        h.angle += 0.01;
-        drawHeart(h.x, h.y, h.size, h.color);
-        if (h.y > window.innerHeight + h.size) {
-          h.y = -h.size;
-          h.x = Math.random() * window.innerWidth;
-          h.angle = Math.random() * Math.PI * 2;
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    resetHearts();
-    animate();
-
-    window.addEventListener("resize", () => {
-      ({ ctx } = setupCanvas(canvas));
-      resetHearts();
-    }, { passive: true });
-  }
-
-  // Inicializa fondo de corazones en todas las páginas
-  startFondoCorazones();
-
-  // --- Botón abrir regalo ---
-  const btnAbrir = document.getElementById("abrir-regalo");
-  if (btnAbrir) {
-    btnAbrir.addEventListener("click", () => {
-      const regalo = document.querySelector(".regalo-screen");
-      const overlay = document.getElementById("mensaje-screen");
-      const card = document.getElementById("mensaje-card");
-
-      if (regalo) regalo.style.display = "none";
-      if (overlay) overlay.style.display = "flex"; // muestra overlay centrado
-      if (card) card.classList.add("show");        // transición suave
-
-      const params = getParams();
-      const id = params.id;
-      const mensajes = JSON.parse(localStorage.getItem('mensajes') || '{}');
-      const mensajeData = mensajes[id];
-
-      if (mensajeData) {
-        document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
-        document.getElementById("contenido").textContent = mensajeData.mensaje;
-        startConfeti();
-      } else {
-        document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
-        document.getElementById("contenido").textContent = "";
-      }
-    });
-  }
-
-  // --- Index.html: generar enlace ---
-  const form = document.getElementById("mensajeForm");
-  if (form) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const data = new FormData(form);
-      const nombre = data.get("nombre");
-      const destino = data.get("destino");
-      const mensaje = data.get("mensaje");
-
-      const id = Math.random().toString(36).substr(2, 6);
-      const mensajes = JSON.parse(localStorage.getItem('mensajes') || '{}');
-      mensajes[id] = { nombre, destino, mensaje };
-      localStorage.setItem('mensajes', JSON.stringify(mensajes));
-
-      const url = `mensaje.html?id=${id}`;
-      document.getElementById("enlace").innerHTML =
-        `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
-    });
-  }
-});
 
 
 
