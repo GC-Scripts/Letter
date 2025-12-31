@@ -24,8 +24,8 @@ body {
   text-align: center;
   position: relative;
   z-index: 2;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  overflow-wrap: break-word;   /* ✅ fuerza quiebre */
+  word-break: break-word;      /* ✅ corta cadenas largas */
 }
 
 h1, h2 {
@@ -46,11 +46,10 @@ h1, h2 {
   font-size: 1.2em;
   color: #444;
   margin-bottom: 20px;
-  white-space: pre-wrap;
+  white-space: pre-wrap;       /* respeta saltos de línea */
   line-height: 1.5;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  overflow-wrap: break-word;   /* ✅ fuerza quiebre */
+  word-break: break-word;      /* ✅ corta cadenas largas */
 }
 
 .emoji {
@@ -220,6 +219,8 @@ button:hover::after {
   pointer-events: none;
   z-index: 1;
 }
+
+
 
 
 
