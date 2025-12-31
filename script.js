@@ -1,15 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // --- Generar ID ---
-  function generarID(length = 6) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for(let i=0;i<length;i++){
-      result += chars.charAt(Math.floor(Math.random()*chars.length));
-    }
-    return result;
-  }
-
   // --- Obtener parámetros URL ---
   function getParams() {
     const params = {};
@@ -28,17 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const particles = [];
     const count = 150;
-
     for(let i=0;i<count;i++){
       particles.push({
         x: Math.random()*canvas.width,
         y: Math.random()*canvas.height - canvas.height,
         r: Math.random()*6+4,
         d: Math.random()*count,
-        color: Math.random()>0.7 ? 'red' : `hsl(${Math.random()*360},100%,60%)`,
+        color: Math.random()>0.7?'red':`hsl(${Math.random()*360},100%,60%)`,
         tilt: Math.random()*10-10,
         tiltAngleIncrement: Math.random()*0.07+0.05,
-        shape: Math.random()>0.7 ? 'heart':'line'
+        shape: Math.random()>0.7?'heart':'line'
       });
     }
 
@@ -56,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.clearRect(0,0,canvas.width,canvas.height);
       particles.forEach(c=>{
         if(c.shape==='heart'){ drawHeart(c.x,c.y,c.r); }
-        else {
+        else{
           ctx.beginPath();
           ctx.lineWidth=c.r/2;
           ctx.strokeStyle=c.color;
@@ -70,59 +59,55 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       requestAnimationFrame(draw);
     }
-
     draw();
     window.addEventListener("resize",()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
   }
 
-  // --- Mensaje.html: abrir regalo ---
-  const cajaRegalo = document.getElementById("caja-regalo");
-  if(cajaRegalo){
-    cajaRegalo.addEventListener("click", ()=>{
-      cajaRegalo.classList.add("abrir");
-      setTimeout(()=>{
-        document.getElementById("regalo-screen").style.display="none";
-        document.getElementById("mensaje-screen").style.display="block";
+  // --- Botón abrir regalo ---
+  const btnAbrir = document.getElementById("abrir-regalo");
+  if(btnAbrir){
+    btnAbrir.addEventListener("click", ()=>{
+      document.querySelector(".regalo-screen").style.display="none";
+      document.getElementById("mensaje-screen").style.display="block";
 
-        const params = getParams();
-        const id = params.id;
-        const mensajes = JSON.parse(localStorage.getItem('mensajes')||'{}');
-        const mensajeData = mensajes[id];
+      const params = getParams();
+      const id = params.id;
+      const mensajes = JSON.parse(localStorage.getItem('mensajes')||'{}');
+      const mensajeData = mensajes[id];
 
-        if(mensajeData){
-          document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
-          document.getElementById("contenido").textContent = mensajeData.mensaje;
-          startConfetti();
-        } else {
-          document.getElementById("saludo").textContent="Mensaje no encontrado 😢";
-          document.getElementById("contenido").textContent="";
-        }
-      },1000);
+      if(mensajeData){
+        document.getElementById("saludo").textContent=`Hola ${mensajeData.destino}!`;
+        document.getElementById("contenido").textContent=mensajeData.mensaje;
+        startConfetti();
+      } else {
+        document.getElementById("saludo").textContent="Mensaje no encontrado 😢";
+        document.getElementById("contenido").textContent="";
+      }
     });
   }
 
   // --- Index.html: generar enlace ---
   const form = document.getElementById("mensajeForm");
   if(form){
-    form.addEventListener("submit",e=>{
+    form.addEventListener("submit", e=>{
       e.preventDefault();
       const data = new FormData(form);
       const nombre = data.get("nombre");
       const destino = data.get("destino");
       const mensaje = data.get("mensaje");
 
-      const id = generarID();
+      const id = Math.random().toString(36).substr(2,6);
       const mensajes = JSON.parse(localStorage.getItem('mensajes')||'{}');
-      mensajes[id] = {nombre,destino,mensaje};
+      mensajes[id]={nombre,destino,mensaje};
       localStorage.setItem('mensajes',JSON.stringify(mensajes));
 
-      const url = `mensaje.html?id=${id}`;
-      const enlaceDiv = document.getElementById("enlace");
-      enlaceDiv.innerHTML = `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
+      const url=`mensaje.html?id=${id}`;
+      document.getElementById("enlace").innerHTML=`Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
     });
   }
 
 });
+
 
 
 
