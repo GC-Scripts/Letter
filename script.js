@@ -1,4 +1,4 @@
-// Función para generar un ID aleatorio
+// --- Generar ID aleatorio ---
 function generarID(length = 6) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -8,7 +8,7 @@ function generarID(length = 6) {
   return result;
 }
 
-// Función para obtener parámetros de URL
+// --- Obtener parámetros URL ---
 function getParams() {
   const params = {};
   window.location.search
@@ -21,20 +21,77 @@ function getParams() {
   return params;
 }
 
-// --- Si estamos en mensaje.html ---
-if (document.getElementById("saludo")) {
-  const params = getParams();
-  const id = params.id;
-  const mensajeData = JSON.parse(localStorage.getItem('mensajes') || '{}')[id];
+// --- Función confeti ---
+function startConfetti() {
+  const canvas = document.getElementById("confeti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  if (mensajeData) {
-    document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
-    document.getElementById("contenido").textContent = mensajeData.mensaje;
-    if (typeof startConfetti === "function") startConfetti();
-  } else {
-    document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
-    document.getElementById("contenido").textContent = "";
+  const confettiCount = 150;
+  const confetti = [];
+
+  for (let i = 0; i < confettiCount; i++) {
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * confettiCount,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      tilt: Math.random() * 10 - 10,
+      tiltAngleIncrement: Math.random() * 0.07 + 0.05
+    });
   }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(c => {
+      ctx.beginPath();
+      ctx.lineWidth = c.r / 2;
+      ctx.strokeStyle = c.color;
+      ctx.moveTo(c.x + c.tilt + c.r / 4, c.y);
+      ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 4);
+      ctx.stroke();
+      c.tilt += c.tiltAngleIncrement;
+      c.y += (Math.cos(c.d) + 3 + c.r/2)/2;
+
+      if (c.y > canvas.height) {
+        c.y = -10;
+        c.x = Math.random() * canvas.width;
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+}
+
+// --- Si estamos en mensaje.html ---
+if (document.getElementById("abrir-btn")) {
+  const abrirBtn = document.getElementById("abrir-btn");
+  abrirBtn.addEventListener("click", () => {
+    // Ocultar regalo, mostrar mensaje
+    document.getElementById("regalo-screen").style.display = "none";
+    document.getElementById("mensaje-screen").style.display = "block";
+
+    // Cargar mensaje desde localStorage
+    const params = getParams();
+    const id = params.id;
+    const mensajeData = JSON.parse(localStorage.getItem('mensajes') || '{}')[id];
+
+    if (mensajeData) {
+      document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
+      document.getElementById("contenido").textContent = mensajeData.mensaje;
+      startConfetti();
+    } else {
+      document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
+      document.getElementById("contenido").textContent = "";
+    }
+  });
 }
 
 // --- Si estamos en index.html ---
@@ -47,20 +104,18 @@ if (form) {
     const destino = data.get("destino");
     const mensaje = data.get("mensaje");
 
-    // Crear ID único
     const id = generarID();
-
-    // Guardar mensaje en localStorage
     const mensajes = JSON.parse(localStorage.getItem('mensajes') || '{}');
     mensajes[id] = { nombre, destino, mensaje };
     localStorage.setItem('mensajes', JSON.stringify(mensajes));
 
-    // Generar enlace bonito
     const url = `mensaje.html?id=${id}`;
     const enlaceDiv = document.getElementById("enlace");
     enlaceDiv.innerHTML = `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
   });
 }
+
+
 
 
 
