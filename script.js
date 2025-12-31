@@ -21,43 +21,58 @@ function getParams() {
   return params;
 }
 
-// --- Función confeti ---
+// --- Confeti y corazones ---
 function startConfetti() {
   const canvas = document.getElementById("confeti");
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const confettiCount = 150;
-  const confetti = [];
+  const particles = [];
+  const count = 150;
 
-  for (let i = 0; i < confettiCount; i++) {
-    confetti.push({
+  for (let i = 0; i < count; i++) {
+    particles.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height - canvas.height,
       r: Math.random() * 6 + 4,
-      d: Math.random() * confettiCount,
-      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      d: Math.random() * count,
+      color: Math.random() > 0.7 ? 'red' : `hsl(${Math.random()*360}, 100%, 60%)`, // corazones rojos
       tilt: Math.random() * 10 - 10,
-      tiltAngleIncrement: Math.random() * 0.07 + 0.05
+      tiltAngleIncrement: Math.random() * 0.07 + 0.05,
+      shape: Math.random() > 0.7 ? 'heart' : 'line'
     });
   }
 
+  function drawHeart(x, y, size) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(x, y - size/2, x - size, y - size/2, x - size, y);
+    ctx.bezierCurveTo(x - size, y + size/2, x, y + size/1.5, x, y + size);
+    ctx.bezierCurveTo(x, y + size/1.5, x + size, y + size/2, x + size, y);
+    ctx.bezierCurveTo(x + size, y - size/2, x, y - size/2, x, y);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+  }
+
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    confetti.forEach(c => {
-      ctx.beginPath();
-      ctx.lineWidth = c.r / 2;
-      ctx.strokeStyle = c.color;
-      ctx.moveTo(c.x + c.tilt + c.r / 4, c.y);
-      ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 4);
-      ctx.stroke();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(c => {
+      if(c.shape === 'heart') {
+        drawHeart(c.x, c.y, c.r);
+      } else {
+        ctx.beginPath();
+        ctx.lineWidth = c.r/2;
+        ctx.strokeStyle = c.color;
+        ctx.moveTo(c.x + c.tilt + c.r/4, c.y);
+        ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r/4);
+        ctx.stroke();
+      }
       c.tilt += c.tiltAngleIncrement;
       c.y += (Math.cos(c.d) + 3 + c.r/2)/2;
-
-      if (c.y > canvas.height) {
+      if(c.y > canvas.height){
         c.y = -10;
-        c.x = Math.random() * canvas.width;
+        c.x = Math.random()*canvas.width;
       }
     });
     requestAnimationFrame(draw);
@@ -70,14 +85,11 @@ function startConfetti() {
   });
 }
 
-// --- Si estamos en mensaje.html ---
+// --- Mensaje.html con caja interactiva ---
 const cajaRegalo = document.getElementById("caja-regalo");
-if (cajaRegalo) {
+if(cajaRegalo){
   cajaRegalo.addEventListener("click", () => {
-    // Animar la caja
     cajaRegalo.classList.add("abrir");
-
-    // Esperar que termine la animación antes de mostrar mensaje
     setTimeout(() => {
       document.getElementById("regalo-screen").style.display = "none";
       document.getElementById("mensaje-screen").style.display = "block";
@@ -86,7 +98,7 @@ if (cajaRegalo) {
       const id = params.id;
       const mensajeData = JSON.parse(localStorage.getItem('mensajes') || '{}')[id];
 
-      if (mensajeData) {
+      if(mensajeData){
         document.getElementById("saludo").textContent = `Hola ${mensajeData.destino}!`;
         document.getElementById("contenido").textContent = mensajeData.mensaje;
         startConfetti();
@@ -94,13 +106,13 @@ if (cajaRegalo) {
         document.getElementById("saludo").textContent = "Mensaje no encontrado 😢";
         document.getElementById("contenido").textContent = "";
       }
-    }, 1000); // duración de la animación
+    }, 1000);
   });
 }
 
-// --- Si estamos en index.html ---
+// --- Index.html ---
 const form = document.getElementById("mensajeForm");
-if (form) {
+if(form){
   form.addEventListener("submit", e => {
     e.preventDefault();
     const data = new FormData(form);
@@ -118,6 +130,7 @@ if (form) {
     enlaceDiv.innerHTML = `Tu enlace está listo: <a href="${url}" target="_blank">${url}</a>`;
   });
 }
+
 
 
 
