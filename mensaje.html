@@ -6,7 +6,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="mensaje-container animate-slide">
+  <!-- Pantalla del regalo -->
+  <div id="regalo-screen" class="regalo-screen">
+    <div class="caja-regalo" id="caja-regalo">🎁</div>
+    <button id="abrir-btn">Abrir</button>
+    <p>Haz clic en el regalo para ver tu mensaje 💌</p>
+  </div>
+
+  <!-- Pantalla del mensaje (inicialmente oculta) -->
+  <div id="mensaje-screen" class="mensaje-container animate-slide" style="display:none;">
     <h2 id="saludo">Hola!</h2>
     <p id="contenido"></p>
     <div class="emoji">💌✨🌸</div>
@@ -19,4 +27,6 @@
   <script src="confeti.js"></script>
 </body>
 </html>
+
+
 
